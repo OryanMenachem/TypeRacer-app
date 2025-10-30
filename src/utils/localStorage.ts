@@ -15,7 +15,9 @@ export function getUsers(): User[] {
 
 export function getLeaderboard(): User[] {
   const users = getUsers().filter((u) => u.bestTime !== null);
-  const leaderboard = users.sort((u1: User, u2: User) => u1.bestTime! - u2.bestTime!);
+  const leaderboard = users.sort(
+    (u1: User, u2: User) => u1.bestTime! - u2.bestTime!
+  );
   return leaderboard;
 }
 
@@ -27,9 +29,9 @@ export function getUser(username: string): User | null {
   return getUsers().find((user) => user.username === username) || null;
 }
 
-export function addUser(username: string): void | string {
+export function addUser(username: string): void | null {
   if (isUserExist(username)) {
-    return "User already exists";
+    return null;
   }
   const user: User = { username, bestTime: null };
   const users = getUsers();
@@ -37,6 +39,7 @@ export function addUser(username: string): void | string {
   updateUsers(users);
 }
 
+// Improve function readability
 export function updateBestTime(user: User): void | string {
   const users = getUsers();
   if (!isUserExist(user.username)) {
