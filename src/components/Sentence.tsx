@@ -12,7 +12,7 @@ export default function Sentence(props: SentenceProps): JSX.Element {
   useEffect(() => {
     if (sentenceIndex === sentences.length) {
       props.setSentencesCompleted!(true);
-      addBestTime(props.seconds!);
+      addBestTime(Math.floor((wordsAmount * 60) / props.seconds!));
       setSentenceIndex(0);
       return;
     } else if (props.sentenceMatches) {
@@ -28,7 +28,7 @@ export default function Sentence(props: SentenceProps): JSX.Element {
       <p className="final-result">
         {"Your typing speed is " +
           Math.floor((wordsAmount * 60) / props.seconds!) +
-          " five words per minute"}
+          " words per minute"}
       </p>
     );
   }
