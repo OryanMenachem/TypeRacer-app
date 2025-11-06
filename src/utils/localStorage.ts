@@ -1,70 +1,26 @@
-interface User {
-  username: string;
-  bestTime: number | null;
-}
-const STORAGE_KEY = "users";
-export function getUsers(): User[] {
-  const strUsers: string | null = localStorage.getItem(STORAGE_KEY);
-  if (strUsers) {
-    return JSON.parse(strUsers);
+const STORAGE_KEY = "bestTimes";
+export function getbestTimes(): number[] {
+  const strBestTimes: string | null = localStorage.getItem(STORAGE_KEY);
+  if (strBestTimes) {
+    return JSON.parse(strBestTimes);
   }
-  const users: User[] = [];
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(users));
-  return users;
+  const bestTimes: number[] = [];
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(bestTimes));
+  return bestTimes;
 }
 
-export function getLeaderboard(): User[] {
-  const users = getUsers().filter((u) => u.bestTime !== null);
-  const leaderboard = users.sort(
-    (u1: User, u2: User) => u1.bestTime! - u2.bestTime!
-  );
-  return leaderboard;
+export function getLeaderboard(): number[] {
+  return getbestTimes()
+    .sort((bt1: number, bt2: number) => bt2 - bt1)
+    .slice(0, 5);
 }
 
-export function updateUsers(users: User[]): void {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(users));
+export function updateBestTimes(bestTimes: number[]): void {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(bestTimes));
 }
 
-export function getUser(username: string): User | null {
-  return getUsers().find((user) => user.username === username) || null;
-}
-
-export function addUser(username: string): void | null {
-  if (isUserExist(username)) {
-    return null;
-  }
-  const user: User = { username, bestTime: null };
-  const users = getUsers();
-  users.push(user);
-  updateUsers(users);
-}
-
-// Improve function readability
-export function updateBestTime(user: User): void | string {
-  const users = getUsers();
-  if (!isUserExist(user.username)) {
-    return "User does not exist";
-  }
-  if (user.bestTime === null) {
-    return "No time has been set";
-  }
-
-  for (const userOfUsers of users) {
-    if (userOfUsers.username === user.username) {
-      if (userOfUsers.bestTime === null) {
-        userOfUsers.bestTime = user.bestTime;
-        break;
-      } else if (userOfUsers.bestTime < user.bestTime) {
-        return "Time not updated, previous time was better";
-      } else {
-        userOfUsers.bestTime = user.bestTime;
-      }
-    }
-  }
-  updateUsers(users);
-  return "The best time has been successfully updated.";
-}
-
-function isUserExist(username: string): boolean {
-  return getUsers().some((u) => u.username === username);
+export function addBestTime(bestTime: number): void {
+  const bestTimes = getbestTimes();
+  bestTimes.push(bestTime);
+  updateBestTimes(bestTimes);
 }

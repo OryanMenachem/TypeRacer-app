@@ -1,10 +1,11 @@
-// import Login from "./components/Login";
-// import StopWatch from "./components/StopWatch";
-import Input from "./components/Input";
+import Manager from "./components/Manager";
+import Leaderboard from "./components/Leaderboard";
 function App() {
   return (
     <>
-      <Input />
+      <h1 className="main-title">Type Racer</h1>
+      <Manager />
+      <Leaderboard />
     </>
   );
 }

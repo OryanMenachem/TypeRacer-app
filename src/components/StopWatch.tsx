@@ -1,25 +1,37 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
+import type { StopWatchProps } from "../types/types";
 
-function StopWatch({ start }: { start: boolean }) {
+export default function StopWatch(props: StopWatchProps) {
   const [time, setTime] = useState<number>(0);
-
+  if (props.resetWatch) {
+    setTime(0);
+    props.setResetWatch!(false);
+  }
   useEffect(() => {
-    start && startWatch();
-    return () => clearInterval(timeHandler.current);
-  }, []);
-
-  let timeHandler = useRef(0);
-  const startWatch = () => {
-    timeHandler.current = setInterval(() => {
-      setTime((prevTime) => prevTime + 1);
-    }, 1000);
-  };
+    let interval: any;
+    if (props.running) {
+      interval = setInterval(() => {
+        setTime((prevTime) => prevTime + 10);
+      }, 10);
+    } else if (!props.running) {
+      clearInterval(interval);
+      props.setSeconds!((prev: number) => prev + Math.floor(time / 1000));
+    }
+    return () => clearInterval(interval);
+  }, [props.running]);
   return (
     <>
-      <h1>{time}</h1>
-      <button onClick={() => setTime(0)}>restart</button>
+      <div className="stop-watch-container">
+        <span className="stop-watch minutes">
+          {("0" + Math.floor((time / 60000) % 60)).slice(-2)}:
+        </span>
+        <span className="stop-watch seconds">
+          {("0" + Math.floor((time / 1000) % 60)).slice(-2)}:
+        </span>
+        <span className="stop-watch milliseconds">
+          {("0" + Math.floor((time / 10) % 100)).slice(-2)}
+        </span>
+      </div>
     </>
   );
 }
-
-export default StopWatch;

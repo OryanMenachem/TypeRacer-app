@@ -1,0 +1,6 @@
+{
+  "sentences": [
+    { "id": 1, "sentence": "She walks to school today", "wordsAmount": 5 },
+    { "id": 2, "sentence": "She walks", "wordsAmount": 2 }
+  ]
+}
